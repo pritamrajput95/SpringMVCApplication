@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jenkins.test.Dao.CourseDao;
 import com.jenkins.test.entity.Course;
+import com.jenkins.test.repository.CourseRepository;
 
 @Service
 public class CourseServiceImpl implements  CourseService {
@@ -14,7 +14,7 @@ public class CourseServiceImpl implements  CourseService {
 	// dao logic
 	
 	@Autowired
-	CourseDao courseDao;
+	CourseRepository courseRepository;
 	
 	//constructor
 	public CourseServiceImpl() {
@@ -25,7 +25,7 @@ public class CourseServiceImpl implements  CourseService {
 	public List<Course> getCourses() {
 	
 	 
-		return courseDao.findAll();
+		return courseRepository.findAll();
 	}
 
 
@@ -33,20 +33,20 @@ public class CourseServiceImpl implements  CourseService {
 	public Course getCourse(long courseid) {
 		
 		
-		return courseDao.getOne(courseid);
+		return courseRepository.getOne(courseid);
 	}
 
 
 	@Override
 	public Course addCourse(Course course) {
-		courseDao.save(course);
+		courseRepository.save(course);
 		return course;
 	}
 
 	@Override
 	public Course updateCourse(Course course) {
 	   
-		courseDao.save(course);
+		courseRepository.save(course);
 		
 		return course;
 	}
@@ -55,9 +55,9 @@ public class CourseServiceImpl implements  CourseService {
 	public void deletedCourse(long parseLong) {
 		 System.out.println("delete method call");
 		
-		 Course entityCourse= courseDao.getOne(parseLong);
+		 Course entityCourse= courseRepository.getOne(parseLong);
 		 
-		 courseDao.delete(entityCourse);
+		 courseRepository.delete(entityCourse);
 	
 	}
 

@@ -1,4 +1,4 @@
-package com.jenkins.test.Dao;
+package com.jenkins.test.repository;
 
 
 
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.jenkins.test.entity.Course;
 
 @Repository
-public interface CourseDao extends JpaRepository<Course,Long>{
+public interface CourseRepository extends JpaRepository<Course,Long>{
 
 }
