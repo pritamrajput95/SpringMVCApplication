@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jenkins.test.entity.Course;
+import com.jenkins.test.exception.CourseNotFoundException;
 import com.jenkins.test.repository.CourseRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CourseServiceImpl implements  CourseService {
@@ -31,10 +34,16 @@ public class CourseServiceImpl implements  CourseService {
 
 	@Override
 	public Course getCourse(long courseid) {
-		
-		
-		return courseRepository.getOne(courseid);
+	    System.out.println("CourseServiceImpl.getCourse()");
+	    Course course = courseRepository.findById(courseid).orElse(null);
+
+	    if (course == null) {
+	        throw new CourseNotFoundException("Course not found with id: " + courseid);
+	    }
+
+	    return course;
 	}
+
 
 
 	@Override
