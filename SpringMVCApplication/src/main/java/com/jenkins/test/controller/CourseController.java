@@ -38,12 +38,11 @@ public class CourseController {
 	}
 	
 	@GetMapping(value="/search",produces = {"application/json" })
-	public Course getCourse (@RequestParam("courseid") String courseid) {
+	public Course getCoursebyId (@RequestParam("courseid") long courseid) {
 		 System.out.println("get method call by id");
-		return this.courseService.getCourse(Long.parseLong(courseid));
+		return this.courseService.getCoursebyId(courseid);
 	}
 	
-	//@PostMapping(path = "/courses",consumes ="application/json")
 	@PostMapping(value="/add")
 	public Course addCourse(@RequestBody Course course) {
 		 System.out.println("add method call");
@@ -74,7 +73,7 @@ public class CourseController {
             return new ResponseEntity<>("Invalid course ID format.", HttpStatus.BAD_REQUEST);
         }
 
-        Course courseToDelete = courseService.getCourse(courseIdLong);
+        Course courseToDelete = courseService.getCoursebyId(courseIdLong);
         if (courseToDelete == null) {
             return new ResponseEntity<>("Course not found.", HttpStatus.NOT_FOUND);
         }

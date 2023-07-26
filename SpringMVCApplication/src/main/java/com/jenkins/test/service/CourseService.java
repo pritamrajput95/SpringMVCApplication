@@ -8,11 +8,12 @@ public interface CourseService {
 
 	public List<Course> getCourses();
 
-	public Course getCourse(long courseid);
+	public Course getCoursebyId(long courseid);
 
 	public Course addCourse(Course course);
 
 	public Course updateCourse(Course course);
 
-	public void deletedCourse(long parseLong);
+	public void deleteCourse(long courseid);
+
 }
