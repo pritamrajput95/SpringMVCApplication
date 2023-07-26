@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +19,7 @@ import com.jenkins.test.entity.Course;
 import com.jenkins.test.service.CourseService;
 
 @RestController
+@RequestMapping("/course")
 public class CourseController {
     
 	@Autowired
@@ -29,39 +31,55 @@ public class CourseController {
 		
 	}
 	
-	@GetMapping("/getallcourses")
+	@GetMapping(value="/all")
 	public List<Course> getCourses(){
 		 System.out.println("get method call for all");
 		return this.courseService.getCourses();
 	}
 	
-	@GetMapping(value="/getcoursebyid",produces = {"application/json" })
+	@GetMapping(value="/search",produces = {"application/json" })
 	public Course getCourse (@RequestParam("courseid") String courseid) {
 		 System.out.println("get method call by id");
 		return this.courseService.getCourse(Long.parseLong(courseid));
 	}
 	
 	//@PostMapping(path = "/courses",consumes ="application/json")
-	@PostMapping("/addcourse")
+	@PostMapping(value="/add")
 	public Course addCourse(@RequestBody Course course) {
 		 System.out.println("add method call");
 		return this.courseService.addCourse(course);
 	}
 	
-	@PutMapping("/updatecourse")
+	@PutMapping(value="/update")
 	public Course updateCourse(@RequestBody Course course) {
 	       System.out.println("update method call");
 		return this.courseService.updateCourse(course);
 	}
 	
-	@DeleteMapping("/deletecourse/{courseId}")
-	public ResponseEntity<HttpStatus> deleteCourse(@PathVariable String courseId){
-		try {
-		this.courseService.deletedCourse(Long.parseLong(courseId));
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-	 catch (Exception e) {
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	}	
-	}
+	/*
+	 * @DeleteMapping(value="/delete/{courseid}") public ResponseEntity<HttpStatus>
+	 * deleteCourse(@RequestParam("courseid") String courseId){ try {
+	 * this.courseService.deletedCourse(Long.parseLong(courseId)); return new
+	 * ResponseEntity<>(HttpStatus.OK); } catch (Exception e) { return new
+	 * ResponseEntity<>(HttpStatus.NOT_FOUND); } }
+	 */
+	
+	@DeleteMapping("/delete/{courseid}")
+    public ResponseEntity<String> deleteCourse(@PathVariable("courseid") String courseid) {
+        System.out.println("delete method call by id");
+        long courseIdLong;
+        try {
+            courseIdLong = Long.parseLong(courseid);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<>("Invalid course ID format.", HttpStatus.BAD_REQUEST);
+        }
+
+        Course courseToDelete = courseService.getCourse(courseIdLong);
+        if (courseToDelete == null) {
+            return new ResponseEntity<>("Course not found.", HttpStatus.NOT_FOUND);
+        }
+
+        courseService.deleteCourse(courseIdLong);
+        return new ResponseEntity<>("Course deleted successfully.", HttpStatus.OK);
+    }	
 }
